@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 function App() {
   const [words, setWords] = useState<string[]>([]);
+  const [text, setText] = useState<string>('');
 
   useEffect(() => {
     async function fillWords() {
@@ -17,7 +18,39 @@ function App() {
     fillWords();
   }, []);
 
-  return <div>{words.length}</div>;
+  const [curWord, setCurWord] = useState<string | null>(null);
+  useEffect(() => {
+    if (words.length === 0) {
+      return;
+    }
+
+    if (text !== curWord && curWord !== null) {
+      return;
+    }
+
+    console.log('here');
+
+    const randomWord: string = words[Math.floor(Math.random() * words.length)] as string;
+    setCurWord(randomWord);
+    setText('');
+  }, [text, curWord, words]);
+
+  const [hasError, setHasError] = useState<boolean>(false);
+  useEffect(() => {
+    if (curWord === null) {
+      return;
+    }
+
+    setHasError(curWord.startsWith(text));
+  }, [text, curWord]);
+
+  return (
+    <div>
+      <p>{curWord?.replace('\n', '\\\n')}</p>
+      <textarea value={text} onChange={(element) => setText(element.target.value)} />
+      <div>{hasError ? 'No errors' : 'Error found'}</div>
+    </div>
+  );
 }
 
 export default App;
