@@ -6,7 +6,11 @@ function App() {
   useEffect(() => {
     async function fillWords() {
       for (let i = 0; i < 102; i += 1) {
-        const newWords = await import(`../words/batch${i}.ts`);
+        const wordsBatchModule = await import(`../words/batch${i}.ts`);
+        const newWordsDictionary = wordsBatchModule.default;
+        const newWords: string[] = Object.entries(newWordsDictionary)
+          .map(([word, description]: [string, any]) => `${word} - ${description}`);
+
         setWords((oldWords) => [...oldWords, ...newWords]);
       }
     }
