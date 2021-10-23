@@ -20,6 +20,7 @@ function App() {
 
   const [curWord, setCurWord] = useState<string | null>(null);
   const [startTime, setStartTime] = useState<number>(Date.now());
+  const [totalErrors, setTotalErrors] = useState<number>(0);
   useEffect(() => {
     if (words.length === 0) {
       return;
@@ -27,6 +28,7 @@ function App() {
 
     if (text.length === 0) {
       setStartTime(Date.now());
+      setTotalErrors(0);
     }
 
     if (text !== curWord && curWord !== null) {
@@ -40,6 +42,7 @@ function App() {
 
     setText('');
     setStartTime(Date.now());
+    setTotalErrors(0);
   }, [text, curWord, words]);
 
   const [hasError, setHasError] = useState<boolean>(false);
@@ -48,7 +51,13 @@ function App() {
       return;
     }
 
-    setHasError(!curWord.startsWith(text));
+    setHasError((prevHasError: boolean) => {
+      const newHasError: boolean = !curWord.startsWith(text);
+      if (!prevHasError && newHasError) {
+        setTotalErrors((prevTotalErrors: number) => prevTotalErrors + 1);
+      }
+      return newHasError;
+    });
   }, [text, curWord]);
 
   const typingTime: number = Date.now() - startTime;
@@ -56,11 +65,12 @@ function App() {
   const typingSpeed: number = Math.round(lettersTyped / (typingTime / 1000) * 100) / 100;
 
   return (
-    <div>
+    <div className="App">
       <p>{curWord?.replace('\n', '\\n')}</p>
       <textarea value={text} onChange={(element) => setText(element.target.value)} />
       <div className={hasError ? 'redBg' : 'whiteBg'}>{hasError ? 'Error found' : 'No errors'}</div>
       <div>Typing speed: {isNaN(typingSpeed) ? 0 : typingSpeed}</div>
+      <div>Total errors: {totalErrors}</div>
     </div>
   );
 }
