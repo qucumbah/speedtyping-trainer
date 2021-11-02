@@ -10,6 +10,10 @@ body {
   background-color: white;
 }
 
+.App .word {
+  white-space: pre-wrap;
+}
+
 .scores {
   display: flex;
   justify-content: left;
