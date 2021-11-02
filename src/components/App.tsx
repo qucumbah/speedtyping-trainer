@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import Score from '../types/Score';
+import ScoreView from './ScoreView';
 
 function App() {
   const [words, setWords] = useState<string[]>([]);
   const [text, setText] = useState<string>('');
-
   useEffect(() => {
     async function fillWords() {
       for (let i = 0; i < 102; i += 1) {
@@ -17,6 +18,16 @@ function App() {
     }
     fillWords();
   }, []);
+
+  const [scores, setScores] = useState<Score[]>(getSavedScores());
+  useEffect(() => {
+    const saveScores = () => {
+      localStorage.setItem('scores', JSON.stringify(scores));
+    }
+
+    window.addEventListener('beforeunload', saveScores);
+    return () => window.removeEventListener('beforeunload', saveScores);
+  }, [scores]);
 
   const [curWord, setCurWord] = useState<string | null>(null);
   const [startTime, setStartTime] = useState<number>(Date.now());
@@ -35,7 +46,22 @@ function App() {
       return;
     }
 
-    const randomWord: string = words[Math.floor(Math.random() * words.length)] as string;
+    if (curWord !== null) {
+      setScores((prevScores: Score[]) => {
+        const newScore: Score = {
+          id: (prevScores.length === 0) ? 0 : prevScores[prevScores.length - 1]!.id + 1,
+          lettersTyped: curWord.length,
+          milliseconds: Date.now() - startTime,
+          totalErrors: totalErrors,
+        };
+
+        console.log(newScore);
+
+        return [...prevScores, newScore];
+      });
+    }
+
+    const randomWord: string = words[Math.floor(Math.random() * words.length)]!;
     setCurWord(randomWord);
 
     console.log(randomWord);
@@ -43,7 +69,7 @@ function App() {
     setText('');
     setStartTime(Date.now());
     setTotalErrors(0);
-  }, [text, curWord, words]);
+  }, [text, curWord, words, startTime, totalErrors]);
 
   const [hasError, setHasError] = useState<boolean>(false);
   useEffect(() => {
@@ -66,13 +92,26 @@ function App() {
 
   return (
     <div className="App">
-      <p>{curWord?.replace('\n', '\\n')}</p>
+      <p className="word">{curWord}</p>
       <textarea value={text} onChange={(element) => setText(element.target.value)} />
       <div className={hasError ? 'redBg' : 'whiteBg'}>{hasError ? 'Error found' : 'No errors'}</div>
       <div>Typing speed: {isNaN(typingSpeed) ? 0 : typingSpeed}</div>
       <div>Total errors: {totalErrors}</div>
+      <div className="scores">
+        {scores.map((score: Score) => <ScoreView score={score} key={score.id} />)}
+      </div>
     </div>
   );
+}
+
+function getSavedScores(): Score[] {
+  const savedScores: string | null = localStorage.getItem('scores');
+
+  if (savedScores === null) {
+    return [];
+  }
+
+  return JSON.parse(savedScores);
 }
 
 export default App;
