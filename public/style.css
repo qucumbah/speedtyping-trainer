@@ -10,7 +10,7 @@ body {
   background-color: white;
 }
 
-.App .word {
+.App .definition {
   white-space: pre-wrap;
 }
 
