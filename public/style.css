@@ -15,11 +15,9 @@ body {
 }
 
 .scores {
-  display: flex;
-  justify-content: left;
-  flex-direction: row-reverse;
   padding: 15px;
   overflow: scroll;
+  white-space: nowrap;
 }
 
 .ScoreView {

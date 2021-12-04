@@ -98,7 +98,7 @@ function App() {
       <div>Typing speed: {isNaN(typingSpeed) ? 0 : typingSpeed}</div>
       <div>Total errors: {totalErrors}</div>
       <div className="scores">
-        {scores.map((score: Score) => <ScoreView score={score} key={score.id} />)}
+        {scores.slice().reverse().map((score: Score) => <ScoreView score={score} key={score.id} />)}
       </div>
     </div>
   );
