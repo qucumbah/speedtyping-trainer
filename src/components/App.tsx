@@ -28,6 +28,13 @@ function App() {
     return () => window.removeEventListener('beforeunload', saveScores);
   }, [scores]);
 
+  function resetScores() {
+    const userPermission: boolean = confirm('Are you sure you want to reset all scores? This cannot be undone.');
+    if (userPermission) {
+      setScores([]);
+    }
+  }
+
   const [hasStartedTyping, setHasStartedTyping] = useState<boolean>(false);
   const [userInput, setUserInput] = useState<string>('');
   const [curDefinition, setCurDefinition] = useState<string | null>(null);
@@ -99,6 +106,8 @@ function App() {
   const lettersTyped: number = userInput.length;
   const typingSpeed: number = (typingTime === 0) ? 0 : Math.round(lettersTyped / (typingTime / 1000) * 100) / 100;
 
+  const [showScores, setShowScores] = useState<boolean>(true);
+
   return (
     <div className="App">
       <p className="definition">{curDefinition}</p>
@@ -106,7 +115,9 @@ function App() {
       <div className={hasError ? 'redBg' : 'whiteBg'}>{hasError ? 'Error found' : 'No errors'}</div>
       <div>Typing speed: {typingSpeed} (typing for {Math.round(typingTime / 100) / 10} seconds)</div>
       <div>Total errors: {totalErrors}</div>
-      <div className="scores">
+      <input type="button" value="Toggle scores" onClick={() => setShowScores((prevShowScores) => !prevShowScores)} />
+      <input type="button" value="Reset scores" onClick={resetScores} />
+      <div className="scores" hidden={!showScores}>
         {scores.slice().reverse().map((score: Score) => <ScoreView score={score} key={score.id} />)}
       </div>
     </div>
