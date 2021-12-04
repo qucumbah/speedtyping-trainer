@@ -28,6 +28,7 @@ function App() {
     return () => window.removeEventListener('beforeunload', saveScores);
   }, [scores]);
 
+  const [hasStartedTyping, setHasStartedTyping] = useState<boolean>(false);
   const [userInput, setUserInput] = useState<string>('');
   const [curDefinition, setCurDefinition] = useState<string | null>(null);
   const [startTime, setStartTime] = useState<number>(Date.now());
@@ -40,6 +41,10 @@ function App() {
     if (userInput.length === 0) {
       setStartTime(Date.now());
       setTotalErrors(0);
+      setHasStartedTyping(false);
+    } else if (!hasStartedTyping) {
+      setStartTime(Date.now());
+      setHasStartedTyping(true);
     }
 
     if (userInput !== curDefinition && curDefinition !== null) {
@@ -84,7 +89,9 @@ function App() {
 
   const [typingTime, setTypingTime] = useState<number>(Date.now() - startTime);
   useInterval({
-    updateFunction: () => { setTypingTime(Date.now() - startTime); },
+    updateFunction: () => {
+      setTypingTime(hasStartedTyping ? Date.now() - startTime : 0);
+    },
     intervalMs: 100,
     dependencies: [startTime],
   });
