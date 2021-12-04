@@ -28,11 +28,34 @@ function App() {
     return () => window.removeEventListener('beforeunload', saveScores);
   }, [scores]);
 
-  function resetScores() {
+  function resetScores(): void {
     const userPermission: boolean = confirm('Are you sure you want to reset all scores? This cannot be undone.');
     if (userPermission) {
       setScores([]);
     }
+  }
+
+  function getAverageScore(): Score {
+    const summedScores: Score = scores.reduce((summedScores: Score, currentScore: Score) => {
+      return {
+        id: -1,
+        lettersTyped: summedScores.lettersTyped + currentScore.lettersTyped,
+        milliseconds: summedScores.milliseconds + currentScore.milliseconds,
+        totalErrors: summedScores.totalErrors + currentScore.totalErrors,
+      };
+    }, {
+      id: -1,
+      lettersTyped: 0,
+      milliseconds: 0,
+      totalErrors: 0,
+    });
+
+    return {
+      id: -1,
+      lettersTyped: summedScores.lettersTyped / scores.length,
+      milliseconds: summedScores.milliseconds / scores.length,
+      totalErrors: summedScores.totalErrors / scores.length,
+    };
   }
 
   const [hasStartedTyping, setHasStartedTyping] = useState<boolean>(false);
@@ -114,10 +137,15 @@ function App() {
       <textarea value={userInput} onChange={(element) => setUserInput(element.target.value)} />
       <div className={hasError ? 'redBg' : 'whiteBg'}>{hasError ? 'Error found' : 'No errors'}</div>
       <div>Typing speed: {typingSpeed} (typing for {Math.round(typingTime / 100) / 10} seconds)</div>
-      <div>Total errors: {totalErrors}</div>
+      <div>Errors made: {totalErrors}</div>
       <input type="button" value="Toggle scores" onClick={() => setShowScores((prevShowScores) => !prevShowScores)} />
       <input type="button" value="Reset scores" onClick={resetScores} />
+      <div className="averageScore">
+        <p>Average score:</p>
+        <ScoreView score={getAverageScore()} />
+      </div>
       <div className="scores" hidden={!showScores}>
+        <p>Prevoius scores:</p>
         {scores.slice().reverse().map((score: Score) => <ScoreView score={score} key={score.id} />)}
       </div>
     </div>

@@ -6,12 +6,14 @@ type ScoreViewProps = {
 };
 
 function ScoreView(props: ScoreViewProps) {
+  const lettersTyped: number = Math.round(props.score.lettersTyped);
   const typingSpeed: number = Math.round(props.score.lettersTyped / (props.score.milliseconds / 1000) * 100) / 100;
+  const totalErrors: number = Math.round(props.score.totalErrors);
   return (
     <div className="ScoreView">
-      <div className="lettersTyped">Letters typed: {props.score.lettersTyped}</div>
+      <div className="lettersTyped">Letters typed: {lettersTyped}</div>
       <div className="typingSpeed">Typing speed: {typingSpeed}</div>
-      <div className="totalErrors">Total errors: {props.score.totalErrors}</div>
+      <div className="totalErrors">Errors made: {totalErrors}</div>
     </div>
   );
 }
