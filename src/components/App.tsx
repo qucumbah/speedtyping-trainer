@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Score from '../types/Score';
 import ScoreView from './ScoreView';
+import useInterval from './useInterval';
 
 function App() {
   const [definitions, setDefinitions] = useState<string[]>([]);
@@ -81,7 +82,13 @@ function App() {
     });
   }, [userInput, curDefinition]);
 
-  const typingTime: number = Date.now() - startTime;
+  const [typingTime, setTypingTime] = useState<number>(Date.now() - startTime);
+  useInterval({
+    updateFunction: () => { setTypingTime(Date.now() - startTime); },
+    intervalMs: 100,
+    dependencies: [startTime],
+  });
+
   const lettersTyped: number = userInput.length;
   const typingSpeed: number = (typingTime === 0) ? 0 : Math.round(lettersTyped / (typingTime / 1000) * 100) / 100;
 
