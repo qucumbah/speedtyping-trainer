@@ -108,7 +108,7 @@ function MainSection({
 
   return (
     <div className="MainSection">
-      <div className="mainTitle">Speedtyping training</div>
+      <h2>Speedtyping training</h2>
       <div className="centralSection">
         <p className="definition">{curDefinition}</p>
         <label className={`userInputWrapper ${hasError ? 'hasError' : ''}`}>

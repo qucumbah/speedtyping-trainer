@@ -11,6 +11,11 @@ body {
   font-family: 'Source Code Pro', monospace;
 }
 
+h2 {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
 ::selection {
   background-color: #fff;
   color: #000;
@@ -27,11 +32,6 @@ body {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-}
-
-.MainSection .mainTitle {
-  font-size: 2rem;
-  font-weight: bold;
 }
 
 .MainSection .centralSection {
@@ -93,15 +93,41 @@ body {
   margin-top: 50px;
 }
 
+.UsefulScoresSubsection .ScoreView {
+  width: 30%;
+}
+
 .PrevScoresSection {
-  padding: 15px;
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  padding: 50px 200px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.PrevScoresSection h2 {
+  margin: 0;
+}
+
+.PrevScoresSection .scoreViewsContainer {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-auto-rows: auto;
+}
+
+.PrevScoresSection .buttons {
+  display: block;
+  margin-top: 30px;
 }
 
 .ScoreView {
   display: inline-block;
   padding: 10px;
   text-align: center;
-  width: 30%;
 }
 
 .ScoreView .title {

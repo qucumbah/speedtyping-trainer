@@ -9,11 +9,19 @@ type PrevScoresSectionProps = {
 };
 
 function PrevScoresSection(props: PrevScoresSectionProps) {
+  if (props.scores.length === 0) {
+    return null;
+  }
+
   return (
     <div className="PrevScoresSection">
-      <input type="button" value="Reset scores" onClick={props.onResetScores} />
-      <p>Prevoius scores:</p>
-      {props.scores.slice().reverse().map((score: Score) => <ScoreView score={score} key={score.id} />)}
+      <h2>Prevoius scores</h2>
+      <div className="scoreViewsContainer">
+        {props.scores.slice().reverse().map((score: Score) => <ScoreView score={score} key={score.id} />)}
+      </div>
+      <div className="buttons">
+        <input type="button" value="Reset scores" onClick={props.onResetScores} />
+      </div>
     </div>
   );
 }
