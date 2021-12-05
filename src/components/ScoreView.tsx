@@ -41,11 +41,11 @@ function ScoreView({
   return (
     <div className="ScoreView">
       {getTitle()}
-      <div className="lettersTyped">Letters typed: {lettersTypedReadable}</div>
       <div className="typingSpeed">
         Typing speed: {typingSpeedReadable}
         {getPerformanceIcon()}
       </div>
+      <div className="lettersTyped">Letters typed: {lettersTypedReadable}</div>
       <div className="totalErrors">Errors made: {totalErrorsReadable}</div>
     </div>
   );

@@ -29,7 +29,7 @@ function PerformanceIndicator({ performance }: PerformanceIndicatorProps) {
 
   return (
     <div className="PerformanceIndicator" title={subtitle}>
-      <img src={iconPath} />
+      <img src={iconPath} draggable="false" />
     </div>
   );
 }

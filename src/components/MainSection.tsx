@@ -103,6 +103,7 @@ function MainSection({
             className="userInput"
             placeholder="Type here"
             value={userInput}
+            spellCheck="false"
             onChange={(element) => setUserInput(element.target.value)}
           />
         </label>
