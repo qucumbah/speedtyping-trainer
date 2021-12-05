@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Score from '../types/Score';
+import PerformanceIndicator from './PerformanceIndicator';
 
 type ScoreViewProps = {
   score: Score,
@@ -12,6 +13,7 @@ function ScoreView({
     lettersTyped,
     milliseconds,
     totalErrors,
+    performance,
   },
   title,
 }: ScoreViewProps) {
@@ -27,12 +29,23 @@ function ScoreView({
 
     return <div className="title">{title}</div>;
   }
+  
+  function getPerformanceIcon(): React.ReactElement | null {
+    if (performance === undefined) {
+      return null;
+    }
+
+    return <PerformanceIndicator performance={performance} />;
+  }
 
   return (
     <div className="ScoreView">
       {getTitle()}
       <div className="lettersTyped">Letters typed: {lettersTypedReadable}</div>
-      <div className="typingSpeed">Typing speed: {typingSpeedReadable}</div>
+      <div className="typingSpeed">
+        Typing speed: {typingSpeedReadable}
+        {getPerformanceIcon()}
+      </div>
       <div className="totalErrors">Errors made: {totalErrorsReadable}</div>
     </div>
   );

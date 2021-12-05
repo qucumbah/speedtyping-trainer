@@ -117,3 +117,21 @@ input[type="button"] {
 input[type="button"]:hover {
   font-weight: bold;
 }
+
+.PerformanceIndicator {
+  display: inline-block;
+  position: relative;
+  width: 16px;
+  filter: invert(1);
+  height: 16px;
+  left: 5px;
+  top: 2px;
+}
+
+.PerformanceIndicator img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
