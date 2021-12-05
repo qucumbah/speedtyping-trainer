@@ -78,7 +78,7 @@ function App() {
     );
 
     const curScoreSpeed = curScore.lettersTyped / curScore.milliseconds;
-    const averageSpeed = speedSum / scores.length;
+    const averageSpeed = speedSum / (scores.length - 1);
 
     console.log(curScoreSpeed, averageSpeed, speedSum, maxSpeed);
 
