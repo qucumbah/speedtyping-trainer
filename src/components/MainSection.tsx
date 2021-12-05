@@ -8,16 +8,16 @@ type MainSectionProps = {
   definitions: string[],
   onSetScores: (setter: (prevValue: Score[]) => Score[]) => void,
   onSetShowScores: (setter: (prevValue: boolean) => boolean) => void,
-  onResetScores: () => void,
   averageScore: Score,
+  lastScore: Score,
 };
 
 function MainSection({
   definitions,
   onSetScores,
   onSetShowScores,
-  onResetScores,
   averageScore,
+  lastScore,
 }: MainSectionProps) {
   const [hasStartedTyping, setHasStartedTyping] = useState<boolean>(false);
   const [userInput, setUserInput] = useState<string>('');
@@ -87,21 +87,33 @@ function MainSection({
     dependencies: [startTime],
   });
 
-  const lettersTyped: number = userInput.length;
-  const typingSpeed: number = (typingTime === 0) ? 0 : Math.round(lettersTyped / (typingTime / 1000) * 100) / 100;
+  const currentScore: Score = {
+    lettersTyped: userInput.length,
+    milliseconds: typingTime,
+    totalErrors,
+  };
 
   return (
     <div className="MainSection">
-      <p className="definition">{curDefinition}</p>
-      <textarea value={userInput} onChange={(element) => setUserInput(element.target.value)} />
-      <div className={hasError ? 'redBg' : 'whiteBg'}>{hasError ? 'Error found' : 'No errors'}</div>
-      <div>Typing speed: {typingSpeed} (typing for {Math.round(typingTime / 100) / 10} seconds)</div>
-      <div>Errors made: {totalErrors}</div>
-      <input type="button" value="Toggle scores" onClick={() => onSetShowScores((prevShowScores) => !prevShowScores)} />
-      <input type="button" value="Reset scores" onClick={onResetScores} />
-      <div className="averageScore">
-        <p>Average score:</p>
-        <ScoreView score={averageScore} />
+      <div className="mainTitle">Speedtyping training</div>
+      <div className="centralSection">
+        <p className="definition">{curDefinition}</p>
+        <label className={`userInputWrapper ${hasError ? 'hasError' : ''}`}>
+          <input
+            className="userInput"
+            placeholder="Type here"
+            value={userInput}
+            onChange={(element) => setUserInput(element.target.value)}
+          />
+        </label>
+        <div className="usefulScoresSection">
+          <ScoreView title={"Current score"} score={currentScore} />
+          <ScoreView title={"Last score"} score={lastScore} />
+          <ScoreView title={"Average score"} score={averageScore} />
+        </div>
+      </div>
+      <div className="buttons">
+        <input type="button" value="Toggle scores" onClick={() => onSetShowScores((prevShowScores) => !prevShowScores)} />
       </div>
     </div>
   );

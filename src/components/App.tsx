@@ -41,11 +41,7 @@ function App() {
         milliseconds: summedScores.milliseconds + currentScore.milliseconds,
         totalErrors: summedScores.totalErrors + currentScore.totalErrors,
       };
-    }, {
-      lettersTyped: 0,
-      milliseconds: 0,
-      totalErrors: 0,
-    });
+    }, getEmptyScore());
 
     return {
       lettersTyped: summedScores.lettersTyped / scores.length,
@@ -54,18 +50,26 @@ function App() {
     };
   }
 
+  function getEmptyScore(): Score {
+    return {
+      lettersTyped: 0,
+      milliseconds: 0,
+      totalErrors: 0,
+    };
+  }
+
   const [showScores, setShowScores] = useState<boolean>(true);
 
   return (
     <div className="App">
       <MainSection
-        averageScore={getAverageScore()}
+        averageScore={(scores.length === 0) ? getEmptyScore() : getAverageScore()}
+        lastScore={(scores.length === 0) ? getEmptyScore() : scores[scores.length - 1]!}
         definitions={definitions}
-        onResetScores={resetScores}
         onSetScores={setScores}
         onSetShowScores={setShowScores}
       />
-      <PrevScoresSection scores={scores} showPrevScores={showScores} />
+      <PrevScoresSection scores={scores} onResetScores={resetScores} showPrevScores={showScores} />
     </div>
   );
 }
