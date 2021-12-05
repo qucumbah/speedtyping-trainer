@@ -14,7 +14,7 @@ body {
   white-space: pre-wrap;
 }
 
-.scores {
+.PrevScoresSection {
   padding: 15px;
   overflow: scroll;
   white-space: nowrap;

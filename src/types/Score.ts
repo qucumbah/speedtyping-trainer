@@ -1,5 +1,5 @@
 type Score = {
-  id: number,
+  id?: number,
   lettersTyped: number,
   milliseconds: number,
   totalErrors: number,
