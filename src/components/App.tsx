@@ -93,7 +93,7 @@ function App() {
     }
   }
 
-  const [showScores, setShowScores] = useState<boolean>(true);
+  const [isMinimal, setIsMinimal] = useState<boolean>(false);
 
   return (
     <div className="App">
@@ -102,9 +102,10 @@ function App() {
         lastScore={(scores.length === 0) ? getEmptyScore() : getLastScore()}
         definitions={definitions}
         onSetScores={setScores}
-        onSetShowScores={setShowScores}
+        isMinimal={isMinimal}
+        onSetIsMinimal={setIsMinimal}
       />
-      <PrevScoresSection scores={scores} onResetScores={resetScores} showPrevScores={showScores} />
+      {isMinimal ? null : <PrevScoresSection scores={scores} onResetScores={resetScores} />}
     </div>
   );
 }

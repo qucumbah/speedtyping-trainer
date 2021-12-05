@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import Score from '../types/Score';
 
-import ScoreView from './ScoreView';
+import Score from '../types/Score';
+import UsefulScoresSubsection from './UsefulScoresSubsection';
+
 import useInterval from './useInterval';
 
 type MainSectionProps = {
   definitions: string[],
   onSetScores: (setter: (prevValue: Score[]) => Score[]) => void,
-  onSetShowScores: (setter: (prevValue: boolean) => boolean) => void,
+  isMinimal: boolean,
+  onSetIsMinimal: (setter: (prevValue: boolean) => boolean) => void,
   averageScore: Score,
   lastScore: Score,
 };
@@ -15,7 +17,8 @@ type MainSectionProps = {
 function MainSection({
   definitions,
   onSetScores,
-  onSetShowScores,
+  isMinimal,
+  onSetIsMinimal,
   averageScore,
   lastScore,
 }: MainSectionProps) {
@@ -87,11 +90,21 @@ function MainSection({
     dependencies: [startTime],
   });
 
-  const currentScore: Score = {
-    lettersTyped: userInput.length,
-    milliseconds: typingTime,
-    totalErrors,
-  };
+  function getUsefulScoresSubsection(): React.ReactElement {
+    const currentScore: Score = {
+      lettersTyped: userInput.length,
+      milliseconds: typingTime,
+      totalErrors,
+    };
+
+    return (
+      <UsefulScoresSubsection
+        currentScore={currentScore}
+        lastScore={lastScore}
+        averageScore={averageScore}
+      />
+    );
+  }
 
   return (
     <div className="MainSection">
@@ -107,14 +120,14 @@ function MainSection({
             onChange={(element) => setUserInput(element.target.value)}
           />
         </label>
-        <div className="usefulScoresSection">
-          <ScoreView title={"Current score"} score={currentScore} />
-          <ScoreView title={"Last score"} score={lastScore} />
-          <ScoreView title={"Average score"} score={averageScore} />
-        </div>
+        {isMinimal ? null : getUsefulScoresSubsection()}
       </div>
       <div className="buttons">
-        <input type="button" value="Toggle scores" onClick={() => onSetShowScores((prevShowScores) => !prevShowScores)} />
+        <input
+          type="button"
+          value="Toggle minimal mode"
+          onClick={() => onSetIsMinimal((prevIsMinimal) => !prevIsMinimal)}
+        />
       </div>
     </div>
   );
