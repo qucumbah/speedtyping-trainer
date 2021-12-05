@@ -22,7 +22,7 @@ function PerformanceIndicator({ performance }: PerformanceIndicatorProps) {
       subtitle = 'Better than average';
       break;
     case 'personal best':
-      iconPath = 'icons/arrow_upward_black_24dp.svg';
+      iconPath = 'icons/local_fire_department_black_24dp.svg';
       subtitle = 'Personal best';
       break;
   }
