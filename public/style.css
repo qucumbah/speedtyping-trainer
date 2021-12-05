@@ -49,10 +49,10 @@ body {
   font: inherit;
   position: relative;
   display: block;
-  padding: 3px;
+  padding: 3px 25px;
   border: 1px solid #fff;
   top: -3px;
-  left: -3px;
+  left: -25px;
 }
 
 .MainSection .userInputWrapper.hasError {
