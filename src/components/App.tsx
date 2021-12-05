@@ -7,7 +7,7 @@ function App() {
   const [definitions, setDefinitions] = useState<string[]>([]);
   useEffect(() => {
     async function fillDefinitions() {
-      for (let i = 0; i <= 36; i += 1) {
+      for (let i = 0; i <= 35; i += 1) {
         const definitionsBatchModule = await import(`../definitions/batch${i}.ts`);
         const newDefinitions = definitionsBatchModule.default as string[];
 
