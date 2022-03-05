@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import Score from '../types/Score';
+import Score, { getEmptyScore } from '../types/Score';
+import ScorePerformance from '../types/ScorePerformance';
 
 export default function useScores() {
   const [scores, setScores] = useState<Score[]>(getSavedScores());
@@ -26,7 +27,69 @@ export default function useScores() {
     }
   }
 
-  return [scores, addNewScore, resetScores] as [Score[], (newScore: Score) => void, () => void];
+  function getAverageScore(): Score {
+    const summedScores: Score = scores.reduce((summedScores: Score, currentScore: Score) => {
+      return {
+        lettersTyped: summedScores.lettersTyped + currentScore.lettersTyped,
+        milliseconds: summedScores.milliseconds + currentScore.milliseconds,
+        totalErrors: summedScores.totalErrors + currentScore.totalErrors,
+      };
+    }, getEmptyScore());
+
+    return {
+      lettersTyped: summedScores.lettersTyped / scores.length,
+      milliseconds: summedScores.milliseconds / scores.length,
+      totalErrors: summedScores.totalErrors / scores.length,
+    };
+  }
+
+  function getLastScore(): Score {
+    const result: Score = Object.assign({}, scores[scores.length - 1]!);
+    result.performance = getPerformance(result);
+    return result;
+  }
+
+  function getPerformance(curScore: Score): ScorePerformance {
+    const [speedSum, maxSpeed]: [number, number] = scores.reduce(
+      ([speedSum, maxSpeed], otherScore) => {
+        if (otherScore.id === curScore.id) {
+          return [speedSum, maxSpeed];
+        }
+        const otherScoreSpeed: number = otherScore.lettersTyped / otherScore.milliseconds;
+        return [speedSum + otherScoreSpeed, Math.max(maxSpeed, otherScoreSpeed)];
+      },
+      [0, 0],
+    );
+
+    const curScoreSpeed = curScore.lettersTyped / curScore.milliseconds;
+    const averageSpeed = speedSum / (scores.length - 1);
+
+    console.log(curScoreSpeed, averageSpeed, speedSum, maxSpeed);
+
+    if (curScoreSpeed > maxSpeed) {
+      return 'personal best';
+    } else if (curScoreSpeed > averageSpeed) {
+      return 'better than average';
+    } else if (curScoreSpeed === averageSpeed) {
+      return 'average';
+    } else {
+      return 'worse than average';
+    }
+  }
+
+  return [
+    scores,
+    addNewScore,
+    resetScores,
+    getAverageScore,
+    getLastScore,
+  ] as [
+    Score[],
+    (newScore: Score) => void,
+    () => void,
+    () => Score,
+    () => Score,
+  ];
 }
 
 function getSavedScores(): Score[] {
