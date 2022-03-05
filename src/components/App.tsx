@@ -28,6 +28,13 @@ function App() {
     return () => window.removeEventListener('beforeunload', saveScores);
   }, [scores]);
 
+  function addNewScore(newScore: Score) {
+    setScores((prevScores: Score[]) => {
+      newScore.id = (prevScores.length === 0) ? 0 : prevScores[prevScores.length - 1]!.id! + 1;
+      return [...prevScores, newScore];
+    });;
+  }
+
   function resetScores(): void {
     const userPermission: boolean = confirm('Are you sure you want to reset all scores? This cannot be undone.');
     if (userPermission) {
@@ -101,7 +108,7 @@ function App() {
         averageScore={(scores.length === 0) ? getEmptyScore() : getAverageScore()}
         lastScore={(scores.length === 0) ? getEmptyScore() : getLastScore()}
         definitions={definitions}
-        onSetScores={setScores}
+        onNewScore={addNewScore}
         isMinimal={isMinimal}
         onSetIsMinimal={setIsMinimal}
       />
