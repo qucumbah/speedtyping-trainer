@@ -1,22 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import useDefinitions from '../hooks/useDefinitions';
 import Score from '../types/Score';
 import ScorePerformance from '../types/ScorePerformance';
 import MainSection from './MainSection';
 import PrevScoresSection from './PrevScoresSection';
 
 function App() {
-  const [definitions, setDefinitions] = useState<string[]>([]);
-  useEffect(() => {
-    async function fillDefinitions() {
-      for (let i = 0; i <= 35; i += 1) {
-        const definitionsBatchModule = await import(`../definitions/batch${i}.ts`);
-        const newDefinitions = definitionsBatchModule.default as string[];
-
-        setDefinitions((oldDefinitions) => [...oldDefinitions, ...newDefinitions]);
-      }
-    }
-    fillDefinitions();
-  }, []);
+  const definitions = useDefinitions();
 
   const [scores, setScores] = useState<Score[]>(getSavedScores());
   useEffect(() => {
