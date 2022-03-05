@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Score from '../types/Score';
 import UsefulScoresSubsection from './UsefulScoresSubsection';
 
-import useInterval from './useInterval';
+import useInterval from '../hooks/useInterval';
 
 type MainSectionProps = {
   definitions: string[],
