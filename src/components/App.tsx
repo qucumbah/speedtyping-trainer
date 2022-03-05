@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import useDefinitions from '../hooks/useDefinitions';
+import useScores from '../hooks/useScores';
 import Score from '../types/Score';
 import ScorePerformance from '../types/ScorePerformance';
 import MainSection from './MainSection';
@@ -8,29 +9,7 @@ import PrevScoresSection from './PrevScoresSection';
 function App() {
   const definitions = useDefinitions();
 
-  const [scores, setScores] = useState<Score[]>(getSavedScores());
-  useEffect(() => {
-    const saveScores = () => {
-      localStorage.setItem('scores', JSON.stringify(scores));
-    }
-
-    window.addEventListener('beforeunload', saveScores);
-    return () => window.removeEventListener('beforeunload', saveScores);
-  }, [scores]);
-
-  function addNewScore(newScore: Score) {
-    setScores((prevScores: Score[]) => {
-      newScore.id = (prevScores.length === 0) ? 0 : prevScores[prevScores.length - 1]!.id! + 1;
-      return [...prevScores, newScore];
-    });;
-  }
-
-  function resetScores(): void {
-    const userPermission: boolean = confirm('Are you sure you want to reset all scores? This cannot be undone.');
-    if (userPermission) {
-      setScores([]);
-    }
-  }
+  const [scores, addNewScore, resetScores] = useScores();
 
   function getAverageScore(): Score {
     const summedScores: Score = scores.reduce((summedScores: Score, currentScore: Score) => {
@@ -105,16 +84,6 @@ function App() {
       {isMinimal ? null : <PrevScoresSection scores={scores} onResetScores={resetScores} />}
     </div>
   );
-}
-
-function getSavedScores(): Score[] {
-  const savedScores: string | null = localStorage.getItem('scores');
-
-  if (savedScores === null) {
-    return [];
-  }
-
-  return JSON.parse(savedScores);
 }
 
 export default App;
