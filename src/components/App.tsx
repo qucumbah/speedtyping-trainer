@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import useDefinitions from '../hooks/useDefinitions';
 import useScores from '../hooks/useScores';
-import Score from '../types/Score';
+import Score, { getEmptyScore } from '../types/Score';
 import ScorePerformance from '../types/ScorePerformance';
 import MainSection from './MainSection';
 import PrevScoresSection from './PrevScoresSection';
@@ -24,14 +24,6 @@ function App() {
       lettersTyped: summedScores.lettersTyped / scores.length,
       milliseconds: summedScores.milliseconds / scores.length,
       totalErrors: summedScores.totalErrors / scores.length,
-    };
-  }
-
-  function getEmptyScore(): Score {
-    return {
-      lettersTyped: 0,
-      milliseconds: 0,
-      totalErrors: 0,
     };
   }
 
