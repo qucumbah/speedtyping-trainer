@@ -15,9 +15,10 @@ export default function useScores() {
 
   function addNewScore(newScore: Score) {
     setScores((prevScores: Score[]) => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       newScore.id = (prevScores.length === 0) ? 0 : prevScores[prevScores.length - 1]!.id! + 1;
       return [...prevScores, newScore];
-    });;
+    });
   }
 
   function resetScores(): void {
@@ -44,7 +45,13 @@ export default function useScores() {
   }
 
   function getLastScore(): Score {
-    const result: Score = Object.assign({}, scores[scores.length - 1]!);
+    const lastScore: Score | undefined = scores[scores.length - 1];
+
+    if (lastScore === undefined) {
+      throw new Error('Could not find last score');
+    }
+
+    const result: Score = Object.assign({}, lastScore);
     result.performance = getPerformance(result);
     return result;
   }

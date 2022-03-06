@@ -36,12 +36,13 @@ export default function useMainSectionLogic(props: UseMainSectionLogicProps) {
       const newScore: Score = {
         lettersTyped: curDefinition.length,
         milliseconds: Date.now() - startTime,
-        totalErrors: totalErrors,
+        totalErrors,
       };
       props.onNewScore(newScore);
     }
 
-    const randomDefinition: string = props.definitions[Math.floor(Math.random() * props.definitions.length)]!;
+    const randomDefinitionIndex: number = Math.floor(Math.random() * props.definitions.length);
+    const randomDefinition: string = props.definitions[randomDefinitionIndex] ?? '';
     setCurDefinition(randomDefinition);
 
     setUserInput('');
@@ -56,7 +57,7 @@ export default function useMainSectionLogic(props: UseMainSectionLogicProps) {
     }
 
     setHasError((prevHasError: boolean) => {
-      const newHasError: boolean = !curDefinition.startsWith(userInput);
+      const newHasError = !curDefinition.startsWith(userInput);
       if (!prevHasError && newHasError) {
         setTotalErrors((prevTotalErrors: number) => prevTotalErrors + 1);
       }

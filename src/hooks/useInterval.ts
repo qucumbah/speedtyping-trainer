@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
 type UseIntervalProps = {
-  updateFunction: Function,
+  updateFunction: () => void,
   intervalMs: number,
-  dependencies: any[],
+  dependencies: unknown[],
 }
 
 export default function useInterval(props: UseIntervalProps) {
